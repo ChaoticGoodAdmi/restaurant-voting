@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "start-seq",
+      "type": "java.lang.Integer",
+      "description": "default starting sequence for entities."
+    }
+  ]
+}
