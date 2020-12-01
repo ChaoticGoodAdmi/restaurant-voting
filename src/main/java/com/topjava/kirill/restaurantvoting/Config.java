@@ -17,7 +17,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-public class Config implements WebMvcConfigurer {
+public class Config implements WebMvcConfigurer{
 
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();

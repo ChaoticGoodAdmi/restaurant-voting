@@ -5,6 +5,7 @@ import com.topjava.kirill.restaurantvoting.repository.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import static com.topjava.kirill.restaurantvoting.util.ValidationUtil.*;
 
 @Service
 @Slf4j
-public class RestaurantService {
+public class RestaurantService implements BaseService<Restaurant> {
 
     private final RestaurantRepository repository;
 
@@ -23,6 +24,7 @@ public class RestaurantService {
         this.repository = repository;
     }
 
+    @Override
     public List<Restaurant> getAll() {
         log.info("Getting all restaurants");
         return repository.findAll();
@@ -38,8 +40,9 @@ public class RestaurantService {
         return repository.findAllByMenuItemsDate(date);
     }
 
+    @Override
     public Restaurant get(int id) {
-        log.info("Getting a restaurant by ID {}", id );
+        log.info("Getting a restaurant by ID {}", id);
         return checkNotFoundWithId(repository.findById(id).orElse(null), id);
     }
 
@@ -53,11 +56,15 @@ public class RestaurantService {
         return checkNotFoundWithId(repository.getByMenuDate(id, date), id);
     }
 
+    @Transactional
+    @Override
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         return repository.save(restaurant);
     }
 
+    @Transactional
+    @Override
     public void update(Restaurant restaurant, Integer id) {
         Assert.notNull(restaurant, "Restaurant can't be null");
         assureEntityIdConsistent(restaurant, id);
@@ -65,7 +72,8 @@ public class RestaurantService {
         repository.save(restaurant);
     }
 
+    @Override
     public void delete(int id) {
-        checkNotFoundWithId(repository.delete(id) != 0, id);
+            checkNotFoundWithId(repository.delete(id) != 0, id);
     }
 }

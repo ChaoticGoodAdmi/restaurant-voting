@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class MenuItem extends AbstractBaseEntity {
     @JoinColumn(name = "restaurant_id")
     @NotNull
     @JsonIgnoreProperties("menuDishes")
+    @ToString.Exclude
     private Restaurant restaurant;
 
     @Column(name = "date")
@@ -36,5 +38,6 @@ public class MenuItem extends AbstractBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
+    @ToString.Exclude
     private Dish dish;
 }

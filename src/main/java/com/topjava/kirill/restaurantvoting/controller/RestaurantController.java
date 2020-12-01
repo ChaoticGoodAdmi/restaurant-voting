@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -20,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(RestaurantController.REST_URL)
 @Slf4j
-public class RestaurantController {
+public class RestaurantController implements BaseController<Restaurant>{
 
     public static final String REST_URL = "/restaurant";
 
@@ -31,7 +30,8 @@ public class RestaurantController {
         this.service = service;
     }
 
-    @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
+    @Override
+    @GetMapping(value = "", produces = APPLICATION_JSON_VALUE)
     public List<Restaurant> getAll() {
         List<Restaurant> restaurants = service.getAll();
         log.info("Retrieved {} restaurants", restaurants.size());
@@ -52,6 +52,7 @@ public class RestaurantController {
         return restaurants;
     }
 
+    @Override
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Restaurant get(@PathVariable Integer id) {
         Restaurant restaurant = service.get(id);
@@ -74,27 +75,26 @@ public class RestaurantController {
         return restaurant;
     }
 
+    @Override
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithNewUri(@Valid @RequestBody Restaurant restaurant) {
         log.info("Creating new {}", restaurant);
         Restaurant created = service.create(restaurant);
-        URI newResourceUri = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId())
-                .toUri();
+        URI newResourceUri = UriBuilder.buildFromEntity(created, REST_URL);
         return ResponseEntity.created(newResourceUri).body(created);
     }
 
+    @Override
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable Integer id) {
         log.info("Updating restaurant {} with data: {}", id, restaurant);
         service.update(restaurant, id);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Integer id) {
         log.info("Deleting restaurant {}", id);
         service.delete(id);
     }
