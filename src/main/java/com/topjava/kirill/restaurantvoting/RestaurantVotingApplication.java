@@ -14,8 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableConfigurationProperties
 @PropertySources({
-        @PropertySource("classpath:application.properties"),
-        @PropertySource("classpath:db/database.properties")
+        @PropertySource("classpath:application.properties")
 })
 @EnableJpaRepositories
 @Slf4j

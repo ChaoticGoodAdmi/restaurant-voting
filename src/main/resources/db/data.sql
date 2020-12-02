@@ -1,6 +1,7 @@
 DELETE FROM restaurant;
 DELETE FROM dish;
 DELETE FROM menu_item;
+DELETE FROM USERS;
 
 INSERT INTO restaurant (id, name, address)
 VALUES (100000, 'McDonalds', 'Street st., 10'),
@@ -25,3 +26,7 @@ VALUES (100000, 100000, '2020-11-01', 100000),
        (100005, 100000, '2020-11-02', 100005),
        (100006, 100001, '2020-11-02', 100006),
        (100007, 100001, '2020-11-02', 100007);
+
+INSERT INTO users (ID, NAME, EMAIL, PASSWORD, ENABLED)
+VALUES (100000, 'user', 'user@user.com', 'pass', true),
+       (100001, 'admin', 'admin@admin.com', 'admin', true);

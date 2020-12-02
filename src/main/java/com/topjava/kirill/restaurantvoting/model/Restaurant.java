@@ -16,17 +16,12 @@ import java.util.List;
 @Table(name = "restaurant")
 @Data
 @NoArgsConstructor
-public class Restaurant extends AbstractBaseEntity {
+public class Restaurant extends AbstractNamedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
-
-    @Column(name = "name")
-    @NotBlank
-    @Size(min = 2, max = 255)
-    private String name;
 
     @Column(name = "address")
     @NotBlank
@@ -39,14 +34,12 @@ public class Restaurant extends AbstractBaseEntity {
     @ToString.Exclude
     private List<MenuItem> menuItems;
 
-/*    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }*/
+    public Restaurant(Integer id, String name, String address, List<MenuItem> menuItems) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.menuItems = menuItems;
+    }
 }
 
 
