@@ -38,4 +38,26 @@ public class MenuItem extends AbstractBaseEntity {
     @JoinColumn(name = "dish_id")
     @ToString.Exclude
     private Dish dish;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        MenuItem menuItem = (MenuItem) o;
+
+        if (!id.equals(menuItem.id)) return false;
+        if (!date.equals(menuItem.date)) return false;
+        return dish.equals(menuItem.dish);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + dish.hashCode();
+        return result;
+    }
 }

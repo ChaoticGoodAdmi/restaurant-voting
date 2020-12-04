@@ -1,20 +1,19 @@
 package com.topjava.kirill.restaurantvoting.service;
 
 import com.topjava.kirill.restaurantvoting.model.Restaurant;
+import com.topjava.kirill.restaurantvoting.util.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.topjava.kirill.restaurantvoting.testdata.RestaurantTestData.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-//@Sql(scripts = "classpath:db/data.sql", config = @SqlConfig(encoding = "UTF-8"))
 @Transactional
 @Slf4j
 class RestaurantServiceTest {
@@ -25,53 +24,56 @@ class RestaurantServiceTest {
     @Test
     void getAll() {
         List<Restaurant> restaurants = service.getAll();
-        assertThat(restaurants)
-                .usingElementComparatorIgnoringFields("menuItems")
-                .isEqualTo(RESTAURANTS);
+        assertMatch(restaurants, RESTAURANTS);
     }
 
     @Test
     void getAllWithMenuItems() {
         List<Restaurant> restaurants = service.getAllWithMenuItems();
-        assertThat(restaurants)
-                .usingFieldByFieldElementComparator()
-                .isEqualTo(RESTAURANTS);
+        assertMatchWithMenuItems(restaurants, RESTAURANTS);
     }
 
     @Test
     void getAllByMenuDate() {
-        List<Restaurant> restaurants = service.getAllByMenuDate(LocalDate.of(2020, 11, 3));
-        assertThat(restaurants)
-                .containsAll(List.of(RESTAURANT_1));
+        List<Restaurant> restaurants = service.getAllByMenuDate(TEST_DATE);
+        assertMatchWithMenuItems(restaurants, getAllRestaurantsForTestDate());
     }
 
     @Test
     void get() {
         Restaurant restaurant = service.get(RESTAURANT_ID_1);
-        assertThat(restaurant)
-                .usingRecursiveComparison()
-                .ignoringFields("menuItems")
-                .isEqualTo(RESTAURANT_1);
+        assertMatch(restaurant, RESTAURANT_1);
     }
 
-    //@Test
+    @Test
     void getWithMenuItems() {
-
+        Restaurant restaurant = service.get(RESTAURANT_ID_3);
+        assertMatchWithMenuItems(restaurant, RESTAURANT_3);
     }
 
-    //@Test
+    @Test
     void getByMenuDate() {
+        Restaurant restaurant = service.getByMenuDate(RESTAURANT_ID_2, TEST_DATE);
+        assertMatch(restaurant, getRestaurantForTestDate());
     }
 
-    //@Test
+    @Test
     void create() {
+        Restaurant restaurant = getCreated();
+        Restaurant newRestaurant = service.create(restaurant);
+        assertMatch(restaurant, service.get(newRestaurant.getId()));
     }
 
-    //@Test
+    @Test
     void update() {
+        Restaurant restaurant = getUpdated();
+        service.update(restaurant, restaurant.getId());
+        assertMatch(restaurant, service.get(restaurant.getId()));
     }
 
-    //@Test
+    @Test
     void delete() {
+        service.delete(RESTAURANT_ID_3);
+        assertThrows(NotFoundException.class, () -> service.get(RESTAURANT_ID_3));
     }
 }

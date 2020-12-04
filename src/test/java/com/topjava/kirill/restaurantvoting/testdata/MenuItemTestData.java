@@ -5,8 +5,7 @@ import com.topjava.kirill.restaurantvoting.model.MenuItem;
 import java.time.LocalDate;
 
 import static com.topjava.kirill.restaurantvoting.testdata.DishTestData.*;
-import static com.topjava.kirill.restaurantvoting.testdata.RestaurantTestData.RESTAURANT_1;
-import static com.topjava.kirill.restaurantvoting.testdata.RestaurantTestData.RESTAURANT_2;
+import static com.topjava.kirill.restaurantvoting.testdata.RestaurantTestData.*;
 
 public class MenuItemTestData {
 
@@ -21,7 +20,8 @@ public class MenuItemTestData {
     public static final int MENU_ITEM_ID_8 = START_SEQ + 7;
     public static final int MENU_ITEM_ID_9 = START_SEQ + 8;
     public static final int MENU_ITEM_ID_10 = START_SEQ + 9;
-
+    public static final int MENU_ITEM_ID_11 = START_SEQ + 10;
+    public static final int MENU_ITEM_ID_12 = START_SEQ + 11;
 
     public static final MenuItem MENU_ITEM_1 =
             new MenuItem(MENU_ITEM_ID_1, RESTAURANT_1, LocalDate.of(2020, 11, 1), DISH_1);
@@ -40,8 +40,11 @@ public class MenuItemTestData {
     public static final MenuItem MENU_ITEM_8 =
             new MenuItem(MENU_ITEM_ID_8, RESTAURANT_2, LocalDate.of(2020, 11, 2), DISH_8);
     public static final MenuItem MENU_ITEM_9 =
-            new MenuItem(MENU_ITEM_ID_9, RESTAURANT_1, LocalDate.of(2020, 11, 3), DISH_1);
+            new MenuItem(MENU_ITEM_ID_9, RESTAURANT_2, LocalDate.of(2020, 11, 3), DISH_1);
     public static final MenuItem MENU_ITEM_10 =
-            new MenuItem(MENU_ITEM_ID_10, RESTAURANT_1, LocalDate.of(2020, 11, 3), DISH_2);
-
+            new MenuItem(MENU_ITEM_ID_10, RESTAURANT_2, LocalDate.of(2020, 11, 3), DISH_2);
+    public static final MenuItem MENU_ITEM_11 =
+            new MenuItem(MENU_ITEM_ID_11, RESTAURANT_3, LocalDate.of(2020, 11, 3), DISH_3);
+    public static final MenuItem MENU_ITEM_12 =
+            new MenuItem(MENU_ITEM_ID_12, RESTAURANT_3, LocalDate.of(2020, 11, 3), DISH_4);
 }
