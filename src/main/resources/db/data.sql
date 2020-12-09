@@ -1,7 +1,22 @@
-DELETE FROM restaurant;
-DELETE FROM dish;
-DELETE FROM menu_item;
-DELETE FROM USERS;
+DELETE
+FROM USER_ROLE;
+DELETE
+FROM USERS;
+DELETE
+FROM restaurant;
+DELETE
+FROM dish;
+DELETE
+FROM menu_item;
+
+INSERT INTO users (ID, NAME, EMAIL, PASSWORD, ENABLED)
+VALUES (100000, 'user', 'user@user.com', '{noop}pass', true),
+       (100001, 'admin', 'admin@admin.com', '{noop}admin', true);
+
+INSERT INTO USER_ROLE (USER_ID, ROLE)
+VALUES (100000, 'ROLE_USER'),
+       (100001, 'ROLE_USER'),
+       (100001, 'ROLE_ADMIN');
 
 INSERT INTO restaurant (id, name, address)
 VALUES (100000, 'McDonalds', 'Street st., 10'),
@@ -31,7 +46,3 @@ VALUES (100000, 100000, '2020-11-01', 100000),
        (100009, 100001, '2020-11-03', 100001),
        (100010, 100002, '2020-11-03', 100002),
        (100011, 100002, '2020-11-03', 100003);
-
-INSERT INTO users (ID, NAME, EMAIL, PASSWORD, ENABLED)
-VALUES (100000, 'user', 'user@user.com', 'pass', true),
-       (100001, 'admin', 'admin@admin.com', 'admin', true);

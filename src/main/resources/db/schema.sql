@@ -1,6 +1,7 @@
 DROP TABLE menu_item IF EXISTS;
 DROP TABLE dish IF EXISTS;
 DROP TABLE restaurant IF EXISTS;
+DROP TABLE user_role If EXISTS;
 DROP TABLE users IF EXISTS;
 
 CREATE TABLE restaurant
@@ -47,3 +48,15 @@ CREATE TABLE users
 
 CREATE UNIQUE INDEX user_unique_email_index
     ON users (email);
+
+CREATE TABLE user_role
+(
+    user_id INTEGER NOT NULL,
+    role    VARCHAR(255),
+    CONSTRAINT user_role_user_id__fkey FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX user_role_index
+    ON user_role (user_id, role);

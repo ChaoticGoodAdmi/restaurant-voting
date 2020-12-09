@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(RestaurantController.REST_URL)
 @Slf4j
+@CrossOrigin("*")
 public class RestaurantController implements BaseController<Restaurant>{
 
     public static final String REST_URL = "/restaurant";
@@ -77,6 +79,7 @@ public class RestaurantController implements BaseController<Restaurant>{
 
     @Override
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Restaurant> createWithNewUri(@Valid @RequestBody Restaurant restaurant) {
         log.info("Creating new {}", restaurant);
         Restaurant created = service.create(restaurant);
@@ -86,6 +89,7 @@ public class RestaurantController implements BaseController<Restaurant>{
 
     @Override
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
+    @Secured("ROLE_ADMIN")
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable Integer id) {
         log.info("Updating restaurant {} with data: {}", id, restaurant);
         service.update(restaurant, id);
@@ -94,6 +98,7 @@ public class RestaurantController implements BaseController<Restaurant>{
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Secured("ROLE_ADMIN")
     public void delete(@PathVariable Integer id) {
         log.info("Deleting restaurant {}", id);
         service.delete(id);

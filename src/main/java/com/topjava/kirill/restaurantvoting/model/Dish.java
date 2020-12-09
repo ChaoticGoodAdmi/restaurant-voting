@@ -1,7 +1,6 @@
 package com.topjava.kirill.restaurantvoting.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,7 +10,6 @@ import java.math.BigDecimal;
 @Table(name = "dish")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class Dish extends AbstractNamedEntity {
 
     @Id
