@@ -45,4 +45,12 @@ public class User extends AbstractNamedEntity {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    public User(Integer id, String name, String email, Set<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.enabled = true;
+        this.roles = roles;
+    }
 }

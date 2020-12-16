@@ -44,22 +44,22 @@ public class DishController implements BaseController<Dish> {
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithNewUri(@Valid @RequestBody Dish dish) {
-        log.info("Creating new {}", dish);
         Dish created = service.create(dish);
+        log.info("Created new {}", dish);
         URI newResourceUri = UriBuilder.buildFromEntity(created, REST_URL);
         return ResponseEntity.created(newResourceUri).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     public void update(@Valid @RequestBody Dish dish, @PathVariable Integer id) {
-        log.info("Updating dish {} with data: {}", id, dish);
         service.update(dish, id);
+        log.info("Updated dish {} with data: {}", id, dish);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-        log.info("Deleting dish {}", id);
         service.delete(id);
+        log.info("Deleted dish {}", id);
     }
 }

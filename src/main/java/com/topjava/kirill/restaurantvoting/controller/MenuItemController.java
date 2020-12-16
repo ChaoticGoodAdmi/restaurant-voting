@@ -56,23 +56,23 @@ public class MenuItemController implements BaseController<MenuItem> {
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuItem> createWithNewUri(@Valid @RequestBody MenuItemDto menuItemDto) {
-        log.info("Creating new {}", menuItemDto);
         MenuItem created = service.create(menuItemDto);
+        log.info("Created new {}", menuItemDto);
         URI newResourceUri = UriBuilder.buildFromEntity(created, REST_URL);
         return ResponseEntity.created(newResourceUri).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     public void update(@Valid @RequestBody MenuItemDto menuItemDto, @PathVariable Integer id) {
-        log.info("Updating menu item {} with data: {}", id, menuItemDto);
         service.update(menuItemDto, id);
+        log.info("Updated menu item {} with data: {}", id, menuItemDto);
     }
 
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-        log.info("Deleting menu item {}", id);
         service.delete(id);
+        log.info("Deleted menu item {}", id);
     }
 }

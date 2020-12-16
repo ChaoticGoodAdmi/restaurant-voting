@@ -2,6 +2,7 @@ package com.topjava.kirill.restaurantvoting.service;
 
 import com.topjava.kirill.restaurantvoting.model.Restaurant;
 import com.topjava.kirill.restaurantvoting.repository.RestaurantRepository;
+import com.topjava.kirill.restaurantvoting.util.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,8 @@ public class RestaurantService implements BaseService<Restaurant> {
     @Override
     public Restaurant get(int id) {
         log.info("Getting a restaurant by ID {}", id);
-        return checkNotFoundWithId(repository.findById(id).orElse(null), id);
+        return checkNotFoundWithId(repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Restaurant " + id + " not found")), id);
     }
 
     public Restaurant getWithMenuItems(Integer id) {

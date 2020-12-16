@@ -81,8 +81,8 @@ public class RestaurantController implements BaseController<Restaurant>{
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Restaurant> createWithNewUri(@Valid @RequestBody Restaurant restaurant) {
-        log.info("Creating new {}", restaurant);
         Restaurant created = service.create(restaurant);
+        log.info("Created new {}", restaurant);
         URI newResourceUri = UriBuilder.buildFromEntity(created, REST_URL);
         return ResponseEntity.created(newResourceUri).body(created);
     }
@@ -91,8 +91,8 @@ public class RestaurantController implements BaseController<Restaurant>{
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     @Secured("ROLE_ADMIN")
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable Integer id) {
-        log.info("Updating restaurant {} with data: {}", id, restaurant);
         service.update(restaurant, id);
+        log.info("Updated restaurant {} with data: {}", id, restaurant);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class RestaurantController implements BaseController<Restaurant>{
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Secured("ROLE_ADMIN")
     public void delete(@PathVariable Integer id) {
-        log.info("Deleting restaurant {}", id);
         service.delete(id);
+        log.info("Deleted restaurant {}", id);
     }
 }

@@ -5,6 +5,7 @@ import com.topjava.kirill.restaurantvoting.model.Dish;
 import com.topjava.kirill.restaurantvoting.model.MenuItem;
 import com.topjava.kirill.restaurantvoting.model.Restaurant;
 import com.topjava.kirill.restaurantvoting.repository.MenuItemRepository;
+import com.topjava.kirill.restaurantvoting.util.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,8 @@ public class MenuItemService implements BaseService<MenuItem> {
     @Override
     public MenuItem get(int id) {
         log.info("Getting a menu item by ID {}", id);
-        return checkNotFoundWithId(repository.findById(id).orElse(null), id);
+        return checkNotFoundWithId(repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Menu item " + id + " not found")), id);
     }
 
     @Override
