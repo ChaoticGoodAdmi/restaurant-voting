@@ -4,6 +4,7 @@ import com.topjava.kirill.restaurantvoting.util.ValidationUtil;
 import com.topjava.kirill.restaurantvoting.util.exception.ErrorInfo;
 import com.topjava.kirill.restaurantvoting.util.exception.ErrorType;
 import com.topjava.kirill.restaurantvoting.util.exception.NotFoundException;
+import com.topjava.kirill.restaurantvoting.util.exception.VoteDeadlineReachedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.topjava.kirill.restaurantvoting.util.exception.ErrorType.DATA_NOT_FOUND;
+import static com.topjava.kirill.restaurantvoting.util.exception.ErrorType.VALIDATION_ERROR;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
@@ -26,6 +28,12 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(VoteDeadlineReachedException.class)
+    public ErrorInfo handleError(HttpServletRequest req, VoteDeadlineReachedException e) {
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {

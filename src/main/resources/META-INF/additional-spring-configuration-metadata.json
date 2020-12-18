@@ -4,6 +4,11 @@
       "name": "start-seq",
       "type": "java.lang.Integer",
       "description": "default starting sequence for entities."
+    },
+    {
+      "name": "vote.deadline",
+      "type": "java.lang.String",
+      "description": "deadline for voting."
     }
   ]
 }
