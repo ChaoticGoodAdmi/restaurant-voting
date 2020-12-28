@@ -3,6 +3,7 @@ package com.topjava.kirill.restaurantvoting.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     @NotBlank

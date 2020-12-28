@@ -4,7 +4,7 @@ import com.topjava.kirill.restaurantvoting.AuthorizedUser;
 import com.topjava.kirill.restaurantvoting.dto.UserDto;
 import com.topjava.kirill.restaurantvoting.model.User;
 import com.topjava.kirill.restaurantvoting.repository.UserRepository;
-import com.topjava.kirill.restaurantvoting.util.UserUtil;
+import com.topjava.kirill.restaurantvoting.util.DtoUtil;
 import com.topjava.kirill.restaurantvoting.util.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,10 @@ public class UserService implements UserDetailsService {
                 () -> new UsernameNotFoundException("Email + " + email + " not found"));
     }
 
+    public User getWithVotes(Integer id) {
+        return checkNotFoundWithId(repository.findByIdWithVotes(id), id);
+    }
+
     public void delete(int id) {
         log.info("Deleting user with id {}", id);
         checkNotFoundWithId(repository.delete(id), id);
@@ -55,22 +59,39 @@ public class UserService implements UserDetailsService {
 
     public User create(UserDto userDto) {
         checkNew(userDto);
-        log.info("Creating user with id {}", userDto.getId());
-        User user = UserUtil.createFromDto(userDto);
-        return repository.save(UserUtil.prepareToSave(user, passwordEncoder));
+        log.info("Creating user {}", userDto);
+        User user = DtoUtil.createFromDto(userDto);
+        return repository.save(DtoUtil.prepareToSave(user, passwordEncoder));
     }
 
     public User create(User user) {
         checkNew(user);
-        log.info("Creating user with id {}", user.getId());
-        return repository.save(UserUtil.prepareToSave(user, passwordEncoder));
+        log.info("Creating user {}", user);
+        return repository.save(DtoUtil.prepareToSave(user, passwordEncoder));
     }
 
     public void update(UserDto userDto, Integer id) {
         assureEntityIdConsistent(userDto, id);
         Integer userId = userDto.getId();
         log.info("Updating user with id {}", userId);
-        User user = UserUtil.prepareToUpdate(get(userId), userDto);
+        User user = DtoUtil.prepareToUpdate(get(userId), userDto);
+        repository.save(user);
+    }
+
+    public void updateProfile(UserDto userDto, int id) {
+        assureEntityIdConsistent(userDto, id);
+        User user = get(userDto.getId());
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        repository.save(user);
+    }
+
+    public void changePassword(int userId, String oldPassword, String newPassword) {
+        User user = get(userId);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect user password");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
         repository.save(user);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -47,6 +48,15 @@ public class VoteService {
                 () -> new NotFoundException("Vote " + id + " not found")), id);
     }
 
+    public Vote getByUserAndDate(Integer userId, LocalDate date) {
+        return voteRepository.findByUserIdAndDate(userId, date).orElseThrow(
+                () -> new NotFoundException("Vote of User " + userId + " for " + date + " not found"));
+    }
+
+    public Long countAllByRestaurantAndDate(int restaurantId, LocalDate date) {
+        return voteRepository.countAllByRestaurantIdAndDate(restaurantId, date);
+    }
+
     public Vote create(LocalDateTime dateTime, Integer userId, Integer restaurantId) {
         LocalTime voteTime = dateTime.toLocalTime();
         if (voteTime.isAfter(voteDeadlineTime)) {
@@ -62,13 +72,10 @@ public class VoteService {
     private Vote save(Vote vote) {
         User user = vote.getUser();
         Optional<Vote> savedVote = voteRepository.findByUserIdAndDate(user.getId(), vote.getDate());
-        if (savedVote.isPresent()) {
-            return update(savedVote.get(), vote.getRestaurant().getId());
-        }
-        return voteRepository.save(vote);
+        return savedVote.map(value -> update(value, vote.getRestaurant().getId())).orElseGet(() -> voteRepository.save(vote));
     }
 
-    private void delete(int id) {
+    public void delete(int id) {
         checkNotFoundWithId(voteRepository.delete(id) != 0, id);
     }
 

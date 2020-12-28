@@ -6,15 +6,15 @@ import com.topjava.kirill.restaurantvoting.service.VoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,10 +42,28 @@ public class VoteController implements BaseController<Vote> {
 
     @Override
     @GetMapping(value = "/vote/{id}")
+    @Secured("ROLE_ADMIN")
     public Vote get(@PathVariable Integer id) {
         Vote vote = service.get(id);
         log.info("Retrieved vote: {}", vote);
         return vote;
+    }
+
+    @GetMapping(value = "/user/{userId}/vote", params = "date", produces = APPLICATION_JSON_VALUE)
+    @Secured("ROLE_ADMIN")
+    public Vote getVoteByUserAndDate(@PathVariable Integer userId,
+                                       @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        Vote vote = service.getByUserAndDate(userId, date);
+        log.info("Got vote by user {} and date {}", userId, date);
+        return vote;
+    }
+
+    @GetMapping(value = "/vote/count", params = {"restaurantId", "date"}, produces = APPLICATION_JSON_VALUE)
+    public Long getVotesCountByRestaurantAndDate(@RequestParam Integer restaurantId,
+                                                   @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        Long count = service.countAllByRestaurantAndDate(restaurantId, date);
+        log.info("Got votes count ({}) by restaurant {} and date {}", count, restaurantId, date);
+        return count;
     }
 
     @PutMapping(value = "/profile/vote", params = "restaurantId", produces = APPLICATION_JSON_VALUE)
@@ -59,12 +77,10 @@ public class VoteController implements BaseController<Vote> {
     }
 
     @Override
-    public void update(Vote entity, Integer id) {
-
-    }
-
-    @Override
-    public void delete(Integer id) {
-
+    @DeleteMapping(value = "/vote/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        log.info("delete vote with id={}", id);
+        service.delete(id);
     }
 }

@@ -1,6 +1,8 @@
 package com.topjava.kirill.restaurantvoting.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.topjava.kirill.restaurantvoting.AuthorizedUser;
+import com.topjava.kirill.restaurantvoting.controller.json.View;
 import com.topjava.kirill.restaurantvoting.dto.UserDto;
 import com.topjava.kirill.restaurantvoting.model.User;
 import com.topjava.kirill.restaurantvoting.service.UserService;
@@ -31,6 +33,7 @@ public class ProfileController {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @JsonView(View.JsonUserProfile.class)
     public User get(@AuthenticationPrincipal AuthorizedUser authUser) {
         int id = authUser.getId();
         User user = service.get(id);
@@ -48,10 +51,29 @@ public class ProfileController {
 
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDto) {
+    @JsonView(View.JsonUserProfile.class)
+    public ResponseEntity<User> register(@RequestBody @Valid UserDto userDto) {
         log.info("Creating new {}", userDto);
         User created = service.create(userDto);
         URI newResourceUri = UriBuilder.buildFromEntity(created, REST_URL);
         return ResponseEntity.created(newResourceUri).body(created);
+    }
+
+    @PutMapping(consumes = APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void update(@RequestBody @Valid UserDto userDto,
+                       @AuthenticationPrincipal AuthorizedUser authUser) {
+        int id = authUser.getId();
+        service.updateProfile(userDto, id);
+        log.info("Updated user with id={}", id);
+    }
+
+    @PostMapping(value = "/change-password", consumes = APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@RequestParam("password") String oldPassword,
+                               @RequestParam("newPassword") String newPassword,
+                               @AuthenticationPrincipal AuthorizedUser authUser) {
+        service.changePassword(authUser.getId(), oldPassword, newPassword);
+        log.info("Changed user password with id={}", authUser.getId());
     }
 }

@@ -1,10 +1,7 @@
 package com.topjava.kirill.restaurantvoting.dto;
 
 import com.topjava.kirill.restaurantvoting.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserDto extends BaseDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,19 +28,17 @@ public class UserDto extends BaseDto implements Serializable {
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 32, message = "length must be between 5 and 32 characters")
+    @Size(min = 5, max = 32)
     private String password;
 
     private boolean enabled;
 
     private Set<Role> roles;
 
-    public UserDto(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles) {
-        this.id = id;
+    public UserDto(Integer id, String name, String email, String password) {
+        super(id);
         this.name = name;
         this.email = email;
         this.password = password;
-        this.enabled = enabled;
-        this.roles = roles;
     }
 }

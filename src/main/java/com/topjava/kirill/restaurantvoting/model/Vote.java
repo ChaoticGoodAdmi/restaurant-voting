@@ -1,12 +1,10 @@
 package com.topjava.kirill.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,18 +28,16 @@ public class Vote extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     @NotNull
-    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class,
-            property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
-    @JsonIgnoreProperties("votes")
     @NotNull
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class,
-            property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIgnoreProperties("votes")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Restaurant restaurant;
 
     public Vote(Integer id, LocalDate date, @NotNull User user, @NotNull Restaurant restaurant) {

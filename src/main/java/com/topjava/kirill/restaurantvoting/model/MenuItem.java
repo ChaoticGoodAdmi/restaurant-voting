@@ -1,12 +1,14 @@
 package com.topjava.kirill.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-
 
 @Entity
 @Table(name = "menu_item",
@@ -16,7 +18,6 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class MenuItem extends AbstractBaseEntity {
 
     @Id
@@ -34,7 +35,7 @@ public class MenuItem extends AbstractBaseEntity {
     @NotNull
     private LocalDate date;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
     @ToString.Exclude
     private Dish dish;
